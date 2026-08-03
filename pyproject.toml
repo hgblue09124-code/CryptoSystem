@@ -1,0 +1,13 @@
+[project]
+name = "cryptosystem"
+version = "1.0.0"
+description = "Scalable long-term personal crypto automation platform"
+authors = [{name = "CryptoSystem Team"}]
+requires-python = ">=3.13"
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
