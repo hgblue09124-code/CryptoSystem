@@ -4,7 +4,9 @@ from src.shared.enums import Timeframe
 from src.database.connection import DatabaseConnection
 from src.database.schema import SchemaManager
 from src.database.repository import CandleRepository, OrderRepository
-from src.collector.mock_client import MockExchangeClient
+
+# 1. THAY ĐỔI: Import ScexExchangeClient thay vì MockExchangeClient
+from src.collector.scex_client import ScexExchangeClient
 from src.collector.service import MarketCollectorService
 from src.research.analyzer import MarketAnalyzer
 from src.decision.strategy import RsiStrategy
@@ -28,8 +30,10 @@ class AutomationCoordinator:
         self.candle_repo = CandleRepository(conn)
         self.order_repo = OrderRepository(conn)
 
-        # Initialize Independent Modules
-        self.collector = MarketCollectorService(MockExchangeClient(), self.candle_repo)
+        # 2. THAY ĐỔI: Khởi tạo ScexExchangeClient kết nối API SCEX thực tế
+        self.exchange_client = ScexExchangeClient()
+        self.collector = MarketCollectorService(self.exchange_client, self.candle_repo)
+        
         self.analyzer = MarketAnalyzer()
         self.strategy = RsiStrategy()
         self.risk_engine = RiskEngine()
@@ -37,10 +41,10 @@ class AutomationCoordinator:
         self.dashboard = SystemDashboard()
         self.ai_advisor = AIAdvisor()
 
-    def run_pipeline(self, symbol: str, timeframe: Timeframe) -> None:
+    def run_pipeline(self, symbol: str = "SBTC_VND", timeframe: Timeframe = Timeframe.M1) -> None:
         logger.info(f"=== STARTING AUTOMATION CYCLE FOR {symbol} ===")
         
-        # 1. Collect Data
+        # 1. Collect Data từ SCEX
         candles = self.collector.collect_and_store_candles(symbol, timeframe, limit=60)
 
         # 2. Research & Metrics Calculation
@@ -53,8 +57,8 @@ class AutomationCoordinator:
         # 4. Decision Engine (Strategy)
         signal = self.strategy.evaluate(symbol, metrics)
 
-        # Simulated Account
-        account = Account(account_id="ACC-001", total_balance=10000.0, available_balance=10000.0)
+        # Simulated Account (Tài khoản giả lập test lệnh)
+        account = Account(account_id="ACC-001", total_balance=100000000.0, available_balance=100000000.0)
 
         # 5. Risk Engine Verification (Mandatory Barrier)
         risk_assessment = self.risk_engine.evaluate_signal(signal, account)

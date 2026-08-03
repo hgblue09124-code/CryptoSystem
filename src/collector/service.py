@@ -4,9 +4,13 @@ from src.shared.models import Candle, Ticker
 from src.shared.enums import Timeframe
 from src.database.repository import CandleRepository
 from src.collector.client import BaseExchangeClient
-from src.collector.exceptions import ExchangeFetchError
 
-logger = get_logger("CollectorService")
+logger = get_logger("MarketCollectorService")
+
+
+class ExchangeFetchError(Exception):
+    """Custom exception khi thu thập dữ liệu từ sàn thất bại."""
+    pass
 
 
 class MarketCollectorService:

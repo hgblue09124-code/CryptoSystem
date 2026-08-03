@@ -1,7 +1,6 @@
-*.db
-*.sqlite3
 __pycache__/
+*.pyc
+data/*.db
+.env
 .vscode/
 .idea/
-logs/
-data/

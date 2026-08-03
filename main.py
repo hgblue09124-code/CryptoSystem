@@ -10,7 +10,7 @@ def main() -> None:
     try:
         app.run()
         # Trigger an automated cycle for BTC/USDT
-        coordinator.run_pipeline("BTC/USDT", Timeframe.H1)
+        coordinator.run_pipeline("SBTC_VND", Timeframe.H1)
     finally:
         coordinator.close()
         app.shutdown()
